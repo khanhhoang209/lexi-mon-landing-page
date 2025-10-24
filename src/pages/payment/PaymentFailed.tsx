@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router'
 import { XCircle, RotateCcw, Home, MessageCircle, ChevronRight } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import axios from '~/config/axios'
 
 const PaymentFailed: React.FC = () => {
   const navigate = useNavigate()
@@ -38,6 +39,27 @@ const PaymentFailed: React.FC = () => {
       status,
       isCancelled
     })
+
+    // Gọi API /payments/cancel để backend xử lý
+    if (orderId && orderId !== 'N/A') {
+      const notifyBackend = async () => {
+        try {
+          // Tạo query string từ tất cả params hiện tại
+          const params = new URLSearchParams()
+          searchParams.forEach((value, key) => {
+            params.append(key, value)
+          })
+
+          await axios.get(`/payments/cancel?${params.toString()}`)
+          console.log('Payment cancel API called successfully')
+        } catch (error) {
+          console.error('Error calling payment cancel API:', error)
+          // Không hiển thị lỗi cho user vì trang failed vẫn hiển thị bình thường
+        }
+      }
+
+      notifyBackend()
+    }
   }, [searchParams])
 
   const handleRetry = () => {

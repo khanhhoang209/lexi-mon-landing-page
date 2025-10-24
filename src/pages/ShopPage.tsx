@@ -454,42 +454,53 @@ const ShopPage: React.FC = () => {
 
           {/* Search Bar */}
           {items.length > 0 && onSearchChange && (
-            <div className={`mt-6 ${isPackageCategory ? 'max-w-md mx-auto' : 'max-w-sm'}`}>
-              <div className='relative group'>
-                <Search
-                  className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${searchValue ? 'text-primary' : 'text-gray-400 group-hover:text-gray-600'}`}
-                />
-                <Input
-                  type='text'
-                  placeholder={`Tìm kiếm ${title.toLowerCase()}...`}
-                  value={searchValue || ''}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                  className='pl-10 pr-4 py-2 h-11 border-2 focus:border-primary transition-all duration-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md'
-                />
+            <div className={`mt-6 ${isPackageCategory ? 'max-w-4xl mx-auto' : 'max-w-3xl'}`}>
+              <div className='flex items-center gap-3'>
+                <div className='relative group w-64'>
+                  <Search
+                    className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${searchValue ? 'text-primary' : 'text-gray-400 group-hover:text-gray-600'}`}
+                  />
+                  <Input
+                    type='text'
+                    placeholder={`Tìm kiếm ${title.toLowerCase()}...`}
+                    value={searchValue || ''}
+                    onChange={(e) => onSearchChange(e.target.value)}
+                    className='pl-10 pr-4 py-2 h-11 border-2 focus:border-primary transition-all duration-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md'
+                  />
+                  {searchValue && (
+                    <button
+                      onClick={() => onSearchChange('')}
+                      className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors'
+                      aria-label='Xóa tìm kiếm'
+                    >
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        className='h-5 w-5'
+                        viewBox='0 0 20 20'
+                        fill='currentColor'
+                      >
+                        <path
+                          fillRule='evenodd'
+                          d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
+                          clipRule='evenodd'
+                        />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+                {/* Search results count - positioned to the right of search box */}
                 {searchValue && (
-                  <button
-                    onClick={() => onSearchChange('')}
-                    className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors'
-                    aria-label='Xóa tìm kiếm'
-                  >
-                    <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5' viewBox='0 0 20 20' fill='currentColor'>
-                      <path
-                        fillRule='evenodd'
-                        d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
-                        clipRule='evenodd'
-                      />
-                    </svg>
-                  </button>
+                  <div className='flex-shrink-0 min-w-[140px]'>
+                    {filteredItems.length === 0 ? (
+                      <p className='text-sm text-gray-500 whitespace-nowrap'>Không tìm thấy kết quả</p>
+                    ) : (
+                      <p className='text-sm text-gray-600 whitespace-nowrap'>
+                        Tìm thấy <span className='font-semibold text-primary'>{filteredItems.length}</span> kết quả
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
-              {searchValue && filteredItems.length === 0 && (
-                <p className='text-sm text-gray-500 mt-2 text-center'>Không tìm thấy kết quả cho "{searchValue}"</p>
-              )}
-              {searchValue && filteredItems.length > 0 && (
-                <p className='text-sm text-gray-600 mt-2 text-center'>
-                  Tìm thấy <span className='font-semibold text-primary'>{filteredItems.length}</span> kết quả
-                </p>
-              )}
             </div>
           )}
         </div>
