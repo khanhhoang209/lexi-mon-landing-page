@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
-import { CheckCircle2, Package, Home, ShoppingBag, Gamepad2 } from 'lucide-react'
+import { CheckCircle2, Home, ShoppingBag, Gamepad2 } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
 
 const PaymentSuccess: React.FC = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const [orderInfo, setOrderInfo] = useState({
+  const [, setOrderInfo] = useState({
     orderId: '',
     amount: '',
     transactionId: ''
