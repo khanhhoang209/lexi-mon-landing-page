@@ -7,7 +7,10 @@ const baseURL = import.meta.env.VITE_BACKEND_URL
 const instance = axios.create({
   baseURL,
   timeout: 20000,
-  headers: { 'Content-Type': 'application/json' }
+  headers: { 
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true' // Bypass ngrok warning page
+  }
 })
 
 let navigate: ((path: string) => void) | null = null

@@ -6,7 +6,12 @@ import { setNavigate } from '~/config/axios'
 import LoginPage from '~/pages/auth/LoginPage'
 import ProtectedRoute from '~/components/auth/ProtectedRoute'
 import NotFound from '~/pages/error/NotFound'
-import HelloPage from '~/pages/HelloPage'
+// import HelloPage from '~/pages/HelloPage'
+import ShopPage from '~/pages/ShopPage'
+import PaymentSuccess from '~/pages/payment/PaymentSuccess'
+import PaymentFailed from '~/pages/payment/PaymentFailed'
+import OrderHistoryPage from '~/pages/OrderHistoryPage'
+
 const AppRoutes: React.FC = () => {
   const navigate = useNavigate()
 
@@ -18,13 +23,27 @@ const AppRoutes: React.FC = () => {
     <Routes>
       {/* Public routes */}
       <Route path='/login' element={<LoginPage />} />
+      <Route path='/shop' element={<ShopPage />} />
+
+      {/* Payment callback routes*/}
+      <Route path='/payments/return' element={<PaymentSuccess />} />
+      <Route path='/payments/cancel' element={<PaymentFailed />} />
 
       {/* Protected routes */}
       <Route
         path='/'
         element={
           <ProtectedRoute>
-            <HelloPage />
+            <ShopPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path='/orders'
+        element={
+          <ProtectedRoute>
+            <OrderHistoryPage />
           </ProtectedRoute>
         }
       />
