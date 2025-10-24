@@ -1,29 +1,41 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { CheckCircle2, Home, ShoppingBag, Gamepad2 } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
+import axios from '~/config/axios'
 
 const PaymentSuccess: React.FC = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const [, setOrderInfo] = useState({
-    orderId: '',
-    amount: '',
-    transactionId: ''
-  })
 
   useEffect(() => {
-    // Lấy thông tin từ URL params (nếu có)
-    const orderId = searchParams.get('orderId') || searchParams.get('orderCode') || 'N/A'
-    const amount = searchParams.get('amount') || searchParams.get('totalAmount') || '0'
-    const transactionId = searchParams.get('transactionId') || searchParams.get('id') || 'N/A'
+    // Lấy orderId từ URL params
+    const orderId = searchParams.get('orderId') || searchParams.get('orderCode')
 
-    setOrderInfo({
-      orderId,
-      amount,
-      transactionId
-    })
+    if (!orderId) {
+      console.warn('PaymentSuccess: No orderId found in URL')
+      return
+    }
+
+    // Gọi API /payments/return để backend xử lý
+    const notifyBackend = async () => {
+      try {
+        // Tạo query string từ tất cả params hiện tại
+        const params = new URLSearchParams()
+        searchParams.forEach((value, key) => {
+          params.append(key, value)
+        })
+
+        await axios.get(`/payments/return?${params.toString()}`)
+        console.log('Payment return API called successfully')
+      } catch (error) {
+        console.error('Error calling payment return API:', error)
+        // Không hiển thị lỗi cho user vì trang success vẫn hiển thị bình thường
+      }
+    }
+
+    notifyBackend()
   }, [searchParams])
 
   return (
