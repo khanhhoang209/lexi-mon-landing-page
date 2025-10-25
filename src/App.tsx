@@ -11,6 +11,8 @@ import ShopPage from '~/pages/ShopPage'
 import PaymentSuccess from '~/pages/payment/PaymentSuccess'
 import PaymentFailed from '~/pages/payment/PaymentFailed'
 import OrderHistoryPage from '~/pages/OrderHistoryPage'
+import CourseDetailPage from '~/pages/CourseDetailPage'
+import ItemDetailPage from '~/pages/ItemDetailPage'
 
 const AppRoutes: React.FC = () => {
   const navigate = useNavigate()
@@ -24,6 +26,8 @@ const AppRoutes: React.FC = () => {
       {/* Public routes */}
       <Route path='/login' element={<LoginPage />} />
       <Route path='/shop' element={<ShopPage />} />
+      <Route path='/shop/courses/:id' element={<CourseDetailPage />} />
+      <Route path='/shop/items/:id' element={<ItemDetailPage />} />
 
       {/* Payment callback routes*/}
       <Route path='/payments/return' element={<PaymentSuccess />} />

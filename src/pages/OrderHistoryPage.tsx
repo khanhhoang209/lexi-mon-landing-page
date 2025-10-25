@@ -175,8 +175,44 @@ const OrderHistoryPage: React.FC = () => {
       window.location.href = checkoutUrl
     } catch (error: unknown) {
       console.error('Retry payment error:', error)
-      const errorMessage = error instanceof Error ? error.message : 'Không thể tạo phiên thanh toán mới'
-      toast.error(errorMessage)
+
+      // Xử lý lỗi đơn hàng hết hạn (20 phút)
+      let errorMessage = 'Không thể tạo phiên thanh toán mới'
+
+      // Lấy message từ axios error response
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: { message?: string } } }
+        if (axiosError.response?.data?.message) {
+          errorMessage = axiosError.response.data.message
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message
+      }
+
+      console.log('Error message:', errorMessage) // Debug log
+
+      // Kiểm tra nếu là lỗi đơn hàng hết hạn
+      if (
+        errorMessage.toLowerCase().includes('hết hạn') ||
+        errorMessage.toLowerCase().includes('vui lòng mua đơn hàng mới')
+      ) {
+        // Refresh danh sách đơn hàng để cập nhật trạng thái
+        fetchOrders()
+
+        toast.error('Đơn hàng đã hết hạn!', {
+          description: 'Đơn hàng chỉ có hiệu lực trong 20 phút. Vui lòng tạo đơn hàng mới từ cửa hàng.',
+          duration: 6000,
+          action: {
+            label: 'Đi đến cửa hàng',
+            onClick: () => navigate('/shop')
+          }
+        })
+      } else {
+        toast.error(errorMessage, {
+          description: 'Vui lòng thử lại sau hoặc liên hệ hỗ trợ.',
+          duration: 5000
+        })
+      }
     } finally {
       setConfirmDialog({
         open: false,
@@ -231,10 +267,9 @@ const OrderHistoryPage: React.FC = () => {
                   {user?.role === 'Premium' && (
                     <div className='flex items-center gap-1.5 mt-0.5'>
                       <div className='relative'>
-                        <Crown className='w-3.5 h-3.5 text-amber-300 fill-amber-300 animate-pulse' />
-                        <div className='absolute inset-0 bg-amber-300 blur-sm opacity-50 animate-pulse'></div>
+                        <Crown className='w-3.5 h-3.5 text-amber-500 fill-amber-500' />
                       </div>
-                      <span className='text-xs font-bold bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 bg-clip-text text-transparent animate-pulse'>
+                      <span className='text-xs font-bold bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 bg-clip-text text-transparent'>
                         Premium
                       </span>
                     </div>

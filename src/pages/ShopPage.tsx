@@ -303,39 +303,53 @@ const ShopPage: React.FC = () => {
     )
   }
 
-  const renderItemCard = (item: Item, categoryName?: string) => (
-    <Card className='flex flex-col h-full hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary/20 bg-white/80 backdrop-blur-sm'>
-      <CardHeader className='pb-2 p-3'>
-        <div className='aspect-square relative overflow-hidden rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 mb-2 shadow-inner'>
-          <img
-            src={item.imageUrl}
-            alt={item.itemName}
-            className='object-cover w-full h-full transition-transform duration-700 hover:scale-110'
-            loading='lazy'
-          />
-          {item.isPremium && (
-            <div className='absolute top-2 right-2 z-10'>
-              <Badge className='bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-amber-950 font-bold shadow-lg border-0 px-2 py-0.5 text-xs flex items-center gap-1'>
-                <Star className='w-3 h-3 fill-amber-950' />
-                Premium
-              </Badge>
+  const renderItemCard = (item: Item, categoryName?: string) => {
+    // Determine if this is a course or item for detail page routing
+    const isCourse = categoryName === 'Course'
+    const detailUrl = isCourse ? `/shop/courses/${item.itemId}` : `/shop/items/${item.itemId}`
+    
+    return (
+      <Card className='flex flex-col h-full hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary/20 bg-white/80 backdrop-blur-sm group/card'>
+        {/* Clickable image/content area - navigate to detail */}
+        <div 
+          className='cursor-pointer' 
+          onClick={() => navigate(detailUrl)}
+        >
+          <CardHeader className='pb-2 p-3'>
+            <div className='aspect-square relative overflow-hidden rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 mb-2 shadow-inner'>
+              <img
+                src={item.imageUrl}
+                alt={item.itemName}
+                className='object-cover w-full h-full transition-transform duration-700 group-hover/card:scale-110'
+                loading='lazy'
+              />
+              {item.isPremium && (
+                <div className='absolute top-2 right-2 z-10'>
+                  <Badge className='bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-amber-950 font-bold shadow-lg border-0 px-2 py-0.5 text-xs flex items-center gap-1'>
+                    <Star className='w-3 h-3 fill-amber-950' />
+                    Premium
+                  </Badge>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <CardTitle className='text-base font-bold line-clamp-2 min-h-[2.8rem] leading-tight'>{item.itemName}</CardTitle>
-      </CardHeader>
+            <CardTitle className='text-base font-bold line-clamp-2 min-h-[2.8rem] leading-tight group-hover/card:text-primary transition-colors'>
+              {item.itemName}
+            </CardTitle>
+          </CardHeader>
 
-      <CardContent className='flex-grow px-3 pb-2'>
-        <CardDescription className='line-clamp-2 text-xs leading-relaxed mb-3 text-gray-600'>
-          {item.description}
-        </CardDescription>
-        <div className='flex items-baseline gap-1'>
-          <span className='text-2xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent'>
-            {item.price != null ? item.price.toLocaleString('vi-VN') : '0'}
-          </span>
-          <span className='text-base font-semibold text-gray-500'>đ</span>
+          <CardContent className='flex-grow px-3 pb-2'>
+            <CardDescription className='line-clamp-2 text-xs leading-relaxed mb-3 text-gray-600'>
+              {item.description}
+            </CardDescription>
+            <div className='flex items-baseline gap-1'>
+              <span className='text-2xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent'>
+                {item.price != null ? item.price.toLocaleString('vi-VN') : '0'}
+              </span>
+              <span className='text-base font-semibold text-gray-500'>đ</span>
+            </div>
+          </CardContent>
         </div>
-      </CardContent>
+        {/* Non-clickable footer with buy button */}
 
       <CardFooter className='pt-0 p-3'>
         {(() => {
@@ -404,7 +418,8 @@ const ShopPage: React.FC = () => {
         })()}
       </CardFooter>
     </Card>
-  )
+    )
+  }
 
   const renderCategory = (
     title: string,
@@ -663,10 +678,9 @@ const ShopPage: React.FC = () => {
                     {user?.role === 'Premium' && (
                       <div className='flex items-center gap-1.5 mt-0.5'>
                         <div className='relative'>
-                          <Crown className='w-3.5 h-3.5 text-amber-300 fill-amber-300 animate-pulse' />
-                          <div className='absolute inset-0 bg-amber-300 blur-sm opacity-50 animate-pulse'></div>
+                          <Crown className='w-3.5 h-3.5 text-amber-500 fill-amber-500' />
                         </div>
-                        <span className='text-xs font-bold bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 bg-clip-text text-transparent animate-pulse'>
+                        <span className='text-xs font-bold bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 bg-clip-text text-transparent'>
                           Premium
                         </span>
                       </div>
